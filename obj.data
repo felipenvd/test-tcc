@@ -1,0 +1,5 @@
+classes = 4
+train = /home/felipe/Projects/tcc/train.txt
+valid = /home/felipe/Projects/tcc/valid.txt
+names = /home/felipe/Projects/tcc/obj.names
+backup = /home/felipe/Projects/tcc/backup/
