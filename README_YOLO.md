@@ -15,11 +15,13 @@ Este projeto utiliza o framework Darknet/YOLO para detecção automática de les
 ├── train.txt           # Lista de imagens de treinamento
 ├── valid.txt           # Lista de imagens de validação
 ├── yolov4-custom.cfg   # Configuração da rede neural (customizada para 4 classes)
-├── yolov4.conv.137     # Pesos pré-treinados
+├── yolov4.conv.137     # Pesos pré-treinados (baixados via setup.sh)
 ├── backup/             # Diretório onde os modelos treinados são salvos
+├── setup.sh            # Script de configuração inicial (EXECUTAR PRIMEIRO)
 ├── train.sh            # Script para iniciar o treinamento
 ├── test.sh             # Script para testar o modelo
-└── README_YOLO.md      # Este arquivo
+├── README_YOLO.md      # Este arquivo
+└── README_YOLOV4_CONFIG.md  # Explicação detalhada do arquivo .cfg
 ```
 
 ## Classes Detectadas
@@ -39,9 +41,32 @@ O modelo foi configurado para detectar 4 tipos de lesões/perdas:
 - **Teste**: 90 imagens (10%)
 - **Formato**: YOLO (arquivos .txt com anotações normalizadas)
 
+## ⚡ Setup Inicial (OBRIGATÓRIO)
+
+**ANTES DE FAZER QUALQUER COISA**, execute o script de configuração:
+
+```bash
+cd /home/felipe/Projects/tcc
+./setup.sh
+```
+
+Este script vai:
+- ✅ Baixar os pesos pré-treinados (yolov4.conv.137 - 162MB)
+- ✅ Criar o diretório backup/
+- ✅ Verificar se todos os arquivos necessários existem
+- ✅ Mostrar estatísticas do dataset
+
+⚠️ **IMPORTANTE**: O arquivo `yolov4.conv.137` é essencial mas **NÃO** está no Git devido ao tamanho (162MB). O script baixa automaticamente.
+
 ## Como Usar
 
-### 1. Treinamento
+### 1. Setup (PRIMEIRA VEZ)
+
+```bash
+./setup.sh
+```
+
+### 2. Treinamento
 
 Para iniciar o treinamento do modelo:
 
@@ -144,6 +169,60 @@ Após o treinamento, você encontrará na pasta `backup/`:
 - Ajuste os parâmetros de data augmentation
 - Verifique a qualidade das anotações
 
+## 📂 Controle de Versão (Git)
+
+### Arquivos NO repositório:
+- ✅ Configurações (.cfg, .data, .names)
+- ✅ Scripts (setup.sh, train.sh, test.sh)
+- ✅ Documentação (.md)
+- ✅ Listas de imagens (train.txt, valid.txt)
+
+### Arquivos IGNORADOS (.gitignore):
+- ❌ `yolov4.conv.137` (162MB - muito grande)
+- ❌ `backup/*.weights` (modelos treinados)
+- ❌ `*.png` (gráficos de treinamento)
+- ❌ Dataset completo (também muito grande)
+
+### Para colaboradores:
+1. Clone o repositório
+2. Execute `./setup.sh` (baixa os pesos automaticamente)
+3. Pronto para usar!
+
+### Por que essa estrutura?
+- ⚡ **Clone rápido** (sem arquivos gigantes)
+- 🔄 **Reprodutível** (qualquer um pode configurar)
+- 📦 **GitHub-friendly** (sem arquivos > 100MB)
+- 👥 **Colaborativo** (fácil para outros desenvolvedores)
+
+## 📋 Fluxo de Trabalho Recomendado
+
+```bash
+# 1. Primeira vez (setup)
+git clone <seu-repo>
+cd seu-repo
+./setup.sh
+
+# 2. Treinar modelo
+./train.sh
+
+# 3. Testar resultado
+./test.sh
+
+# 4. Commit apenas configurações (não os .weights!)
+git add *.cfg *.md *.sh
+git commit -m "Ajuste nos parâmetros de treinamento"
+git push
+```
+
+## 📖 Documentação Adicional
+
+- **README_YOLOV4_CONFIG.md**: Explicação detalhada do arquivo .cfg
+- **obj.names**: Classes do dataset
+- **Comentários no código**: Scripts documentados
+
 ## Contato
 
-Para dúvidas sobre este projeto de detecção de lesões em carcaças bovinas, consulte a documentação do TCC.
+Para dúvidas sobre este projeto de detecção de lesões em carcaças bovinas:
+- **Autores**: Felipe e José Pires
+- **Projeto**: TCC - Detecção automática com YOLO
+- **Tecnologias**: Darknet, YOLO v4, CUDA
