@@ -5,7 +5,7 @@
 
 echo "=== Iniciando Treinamento do Modelo YOLO ==="
 echo "Dataset: Detecção de lesões e perdas em carcaças bovinas"
-echo "Classes: 4 (lesao_superficial, lesao_profunda, perda_corte, perda_abscesso)"
+echo "Classes: 3 (lesao_traseiro, perda_dianteiro, perda_traseiro)"
 echo "Imagens de treinamento: 720"
 echo "Imagens de validação: 90"
 echo ""

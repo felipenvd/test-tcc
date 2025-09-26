@@ -1,4 +1,4 @@
-classes = 4
+classes = 3
 train = /home/felipe/Projects/tcc/train.txt
 valid = /home/felipe/Projects/tcc/valid.txt
 names = /home/felipe/Projects/tcc/obj.names

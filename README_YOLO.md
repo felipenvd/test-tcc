@@ -10,11 +10,11 @@ Este projeto utiliza o framework Darknet/YOLO para detecção automática de les
 │   ├── train/          # 720 imagens de treinamento + anotações
 │   ├── valid/          # 90 imagens de validação + anotações
 │   └── test/           # 90 imagens de teste + anotações
-├── obj.names           # Nomes das 4 classes
+├── obj.names           # Nomes das 3 classes
 ├── obj.data            # Configuração do dataset
 ├── train.txt           # Lista de imagens de treinamento
 ├── valid.txt           # Lista de imagens de validação
-├── yolov4-custom.cfg   # Configuração da rede neural (customizada para 4 classes)
+├── yolov4-custom.cfg   # Configuração da rede neural (customizada para 3 classes)
 ├── yolov4.conv.137     # Pesos pré-treinados (baixados via setup.sh)
 ├── backup/             # Diretório onde os modelos treinados são salvos
 ├── setup.sh            # Script de configuração inicial (EXECUTAR PRIMEIRO)
@@ -26,12 +26,11 @@ Este projeto utiliza o framework Darknet/YOLO para detecção automática de les
 
 ## Classes Detectadas
 
-O modelo foi configurado para detectar 4 tipos de lesões/perdas:
+O modelo foi configurado para detectar 3 tipos de lesões/perdas:
 
-1. **Lesao no quarto dianteiro** (ID: 0)
-2. **Lesao no quarto traseiro** (ID: 1) 
-3. **Perda no quarto dianteiro** (ID: 2)
-4. **Perda no quarto traseiro** (ID: 3) 
+1. **Lesao no quarto traseiro** (ID: 0)
+2. **Perda no quarto dianteiro** (ID: 1)
+3. **Perda no quarto traseiro** (ID: 2) 
 
 ## Dataset
 

@@ -82,7 +82,7 @@ Thumbs.db
 *.temp
 
 # dataset
-deteccao-de-lesoes-e-perdas-nas-carcacas-bovinas.v1i.darknet/
+deteccao-de-lesoes-e-perdas-nas-carcacas-bovinas/
 
 # YOLO - Pesos pré-treinados e modelos treinados
 *.weights
