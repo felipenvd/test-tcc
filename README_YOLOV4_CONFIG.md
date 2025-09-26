@@ -24,14 +24,14 @@ channels=3           # Canais de cor (RGB = 3)
 momentum=0.949       # Parâmetro do otimizador
 decay=0.0005         # Regularização (evita overfitting)
 learning_rate=0.0013 # Velocidade de aprendizado
-max_batches=8000     # Máximo de iterações de treinamento
+max_batches=1500     # Máximo de iterações de treinamento (otimizado)
 ```
 
 **Por que estes valores?**
 - `batch=64`: Processa 64 imagens por iteração (bom para GPU RTX 4050)
 - `subdivisions=16`: Divide em 4 mini-batches de 16 (64÷16=4) para caber na memória
 - `608x608`: Tamanho padrão do YOLOv4, múltiplo de 32
-- `max_batches=8000`: Para 4 classes, 2000×4=8000 iterações
+- `max_batches=1500`: Para 3 classes, 500×3=1500 iterações (otimizado)
 
 ### 2. **Camadas Convolucionais**
 ```ini
@@ -74,19 +74,19 @@ layers = -1, -3     # Conecta a camada atual com a 1ª e 3ª anteriores
 ### 5. **Camadas YOLO (Detecção)**
 ```ini
 [convolutional]
-filters=27          # CRÍTICO: (classes + 5) × 3 = (4 + 5) × 3 = 27
+filters=24          # CRÍTICO: (classes + 5) × 3 = (3 + 5) × 3 = 24
 activation=linear
 
 [yolo]
 mask = 0,1,2        # Quais anchors usar nesta escala
 anchors = 12,16, 19,36, 40,28, 36,75, 76,55, 72,146, 142,110, 192,243, 459,401
-classes=4           # CRÍTICO: Número de classes do seu dataset
+classes=3           # CRÍTICO: Número de classes do seu dataset
 ```
 
 **Esta é a parte mais importante!**
-- `filters=27`: Cada âncora prediz 9 valores (4 coordenadas + 1 confiança + 4 classes)
-- 3 âncoras × 9 valores = 27 filtros
-- `classes=4`: Suas 4 classes (lesões/perdas nos quartos)
+- `filters=24`: Cada âncora prediz 8 valores (4 coordenadas + 1 confiança + 3 classes)
+- 3 âncoras × 8 valores = 24 filtros
+- `classes=3`: Suas 3 classes (lesão traseiro, perdas dianteiro/traseiro)
 
 ## Customizações Feitas Para Seu Projeto
 
@@ -97,13 +97,14 @@ filters=255         # (80 + 5) × 3 = 255
 max_batches=500500  # Muito para seu dataset pequeno
 ```
 
-### Customizado (Carcaças Bovinas - 4 classes):
+### Customizado (Carcaças Bovinas - 3 classes):
 ```ini
-classes=4
-filters=27          # (4 + 5) × 3 = 27
-max_batches=8000    # 2000 × 4 classes
-steps=6400,7200     # 80% e 90% do max_batches
-subdivisions=16     # Otimizado para RTX 4050
+classes=3
+filters=24          # (3 + 5) × 3 = 24
+max_batches=1500    # 500 × 3 classes (otimizado)
+steps=1200,1350     # 80% e 90% do max_batches
+burn_in=300         # Warm-up reduzido
+subdivisions=64     # Otimizado para RTX 4050 (economia GPU)
 ```
 
 ## Fluxo da Rede Neural
@@ -177,7 +178,7 @@ height=416
 
 - ✅ **Define a arquitetura** completa da rede neural
 - ✅ **Especifica parâmetros** de treinamento
-- ✅ **Configura para seu dataset** (4 classes)
+- ✅ **Configura para seu dataset** (3 classes balanceadas)
 - ✅ **Otimiza para sua GPU** (RTX 4050)
 - ✅ **Controla qualidade** vs velocidade
 

@@ -82,7 +82,7 @@ random=0    # Mantém tamanho fixo 608×608
 
 **Original:**
 ```ini
-max_batches = 8000     # 2000 × 4 classes (regra tradicional)
+max_batches = 1500     # 500 × 3 classes (otimizado para dataset balanceado)
 steps=6400,7200        # 80% e 90% do max_batches
 ```
 

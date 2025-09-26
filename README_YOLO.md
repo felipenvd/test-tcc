@@ -6,10 +6,10 @@ Este projeto utiliza o framework Darknet/YOLO para detecção automática de les
 
 ```
 /home/felipe/Projects/tcc/
-├── deteccao-de-lesoes-e-perdas-nas-carcacas-bovinas.v1i.darknet/
-│   ├── train/          # 720 imagens de treinamento + anotações
-│   ├── valid/          # 90 imagens de validação + anotações
-│   └── test/           # 90 imagens de teste + anotações
+├── deteccao-de-lesoes-e-perdas-nas-carcacas-bovinas/
+│   ├── train/images/   # 720 imagens + anotações (JPG + TXT juntos)
+│   ├── valid/images/   # 90 imagens + anotações (JPG + TXT juntos)
+│   └── test/images/    # 90 imagens + anotações (JPG + TXT juntos)
 ├── obj.names           # Nomes das 3 classes
 ├── obj.data            # Configuração do dataset
 ├── train.txt           # Lista de imagens de treinamento
@@ -113,10 +113,11 @@ darknet detector map obj.data yolov4-custom.cfg backup/yolov4-custom_best.weight
 
 O arquivo `yolov4-custom.cfg` foi customizado para este dataset:
 
-- **Classes**: 4 (ao invés de 80 do COCO)
-- **Filters**: 27 nas camadas de saída (fórmula: (classes + 5) × 3)
-- **Max batches**: 8000 (2000 × número de classes)
-- **Steps**: 6400, 7200 (80% e 90% do max_batches)
+- **Classes**: 3 (ao invés de 80 do COCO)
+- **Filters**: 24 nas camadas de saída (fórmula: (classes + 5) × 3)
+- **Max batches**: 1500 (500 × número de classes)
+- **Steps**: 1200, 1350 (80% e 90% do max_batches)
+- **Burn in**: 300 (warm-up inicial)
 - **Batch size**: 64
 - **Subdivisions**: 16
 
@@ -147,7 +148,7 @@ Após o treinamento, você encontrará na pasta `backup/`:
 
 ## Dicas de Uso
 
-1. **Tempo de treinamento**: Com sua RTX 4050, o treinamento pode levar algumas horas
+1. **Tempo de treinamento**: Com sua RTX 4050, o treinamento leva ~30-45 minutos (1500 iterações)
 2. **Monitoramento**: Acompanhe a loss - deve convergir gradualmente
 3. **Early stopping**: Se a loss parar de diminuir, você pode interromper o treinamento
 4. **Inferência**: Use threshold entre 0.3-0.5 para detecção (ajuste conforme necessário)
@@ -175,6 +176,7 @@ Após o treinamento, você encontrará na pasta `backup/`:
 - ✅ Scripts (setup.sh, train.sh, test.sh)
 - ✅ Documentação (.md)
 - ✅ Listas de imagens (train.txt, valid.txt)
+- ✅ **Estrutura otimizada**: Labels e imagens na mesma pasta
 
 ### Arquivos IGNORADOS (.gitignore):
 - ❌ `yolov4.conv.137` (162MB - muito grande)
