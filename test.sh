@@ -27,7 +27,7 @@ if [ $# -eq 1 ]; then
     fi
 
     echo "Testando com imagem: $IMAGE_PATH"
-    darknet detector test obj.data yolov4-custom.cfg "$WEIGHTS_FILE" "$IMAGE_PATH" -thresh 0.05
+    darknet detector test obj.data yolov4-custom.cfg "$WEIGHTS_FILE" "$IMAGE_PATH" -thresh 0.25
 else
     echo "Calculando mAP (Mean Average Precision) no conjunto de validação..."
     darknet detector map obj.data yolov4-custom.cfg "$WEIGHTS_FILE"

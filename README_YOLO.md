@@ -75,9 +75,11 @@ cd /home/felipe/Projects/tcc
 ```
 
 O treinamento foi configurado para:
-- 8000 iterações máximas
-- Batch size: 64, Subdivisions: 16
-- Cálculo de mAP durante o treinamento
+- 3000 iterações (otimizado)
+- Batch size: 64, Subdivisions: 32
+- Cálculo de mAP a partir da iteração 200
+- Learning rate: 0.0001 (estável)
+- Resolução: 512x512 (economia GPU)
 - Salvamento automático dos melhores pesos em `backup/`
 
 ### 2. Teste e Avaliação
@@ -115,9 +117,12 @@ O arquivo `yolov4-custom.cfg` foi customizado para este dataset:
 
 - **Classes**: 3 (ao invés de 80 do COCO)
 - **Filters**: 24 nas camadas de saída (fórmula: (classes + 5) × 3)
-- **Max batches**: 1500 (500 × número de classes)
-- **Steps**: 1200, 1350 (80% e 90% do max_batches)
-- **Burn in**: 300 (warm-up inicial)
+- **Max batches**: 3000 (1000 × número de classes)
+- **Steps**: 2400, 2700 (80% e 90% do max_batches)
+- **Burn in**: 200 (warm-up inicial)
+- **Learning rate**: 0.0001 (otimizado para estabilidade)
+- **Resolução**: 512x512 (economia de GPU)
+- **Subdivisions**: 32 (balanço qualidade/memória)
 - **Batch size**: 64
 - **Subdivisions**: 16
 
@@ -148,7 +153,7 @@ Após o treinamento, você encontrará na pasta `backup/`:
 
 ## Dicas de Uso
 
-1. **Tempo de treinamento**: Com sua RTX 4050, o treinamento leva ~30-45 minutos (1500 iterações)
+1. **Tempo de treinamento**: Com sua RTX 4050, o treinamento leva ~4-5 horas (3000 iterações)
 2. **Monitoramento**: Acompanhe a loss - deve convergir gradualmente
 3. **Early stopping**: Se a loss parar de diminuir, você pode interromper o treinamento
 4. **Inferência**: Use threshold entre 0.3-0.5 para detecção (ajuste conforme necessário)
@@ -156,18 +161,22 @@ Após o treinamento, você encontrará na pasta `backup/`:
 ## Solução de Problemas
 
 ### Erro de memória GPU:
-- Aumente `subdivisions` no arquivo .cfg (ex: 32 ou 64)
+- Aumente `subdivisions` no arquivo .cfg (ex: 64 ou 128)
+- Reduza resolução para 416x416 se necessário
 - Diminua `batch` se necessário
 
 ### Loss não converge:
 - Verifique se as anotações estão corretas
-- Considere ajustar o learning rate
+- Use learning rate conservador (0.0001)
+- Evite learning rates altos (>0.001) que causam instabilidade
 - Verifique se as imagens e anotações correspondem
 
 ### mAP muito baixo:
-- Aumente o número de iterações
+- Aumente o número de iterações (mínimo 3000)
 - Ajuste os parâmetros de data augmentation
 - Verifique a qualidade das anotações
+- Use learning rate estável (0.0001)
+- Certifique-se que o dataset está balanceado
 
 ## 📂 Controle de Versão (Git)
 
@@ -203,17 +212,40 @@ git clone <seu-repo>
 cd seu-repo
 ./setup.sh
 
-# 2. Treinar modelo
+# 2. Treinar modelo (Python recomendado)
+python3 train_yolo.py
+
+# Ou usar script bash
 ./train.sh
 
 # 3. Testar resultado
 ./test.sh
 
 # 4. Commit apenas configurações (não os .weights!)
-git add *.cfg *.md *.sh
-git commit -m "Ajuste nos parâmetros de treinamento"
+git add *.cfg *.md *.sh *.py
+git commit -m "Configuração final: mAP 18.9% com 3000 iterações"
 git push
 ```
+
+## 🎯 Resultados Obtidos
+
+### **Resultado Final do Treinamento:**
+- **mAP@0.50**: 18.90% (resultado sólido para dataset desafiador)
+- **Recall**: 24% (encontra 1 em cada 4 objetos)
+- **Precision**: 33% (1 em cada 3 detecções corretas)
+- **Detecções Corretas**: 106 no conjunto de validação
+
+### **Performance por Classe:**
+- **Lesão no quarto traseiro**: 20.66% AP
+- **Perda no quarto dianteiro**: 13.23% AP
+- **Perda no quarto traseiro**: 22.79% AP (melhor classe)
+
+### **Configuração Final Otimizada:**
+- **3000 iterações** (4-5 horas na RTX 4050)
+- **Learning rate**: 0.0001 (estável)
+- **Resolução**: 512x512 (economia GPU)
+- **Subdivisions**: 32 (balanceado)
+- **3 classes balanceadas** (removida classe problemática)
 
 ## 📖 Documentação Adicional
 

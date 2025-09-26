@@ -94,3 +94,7 @@ backup/
 chart.png
 *.backup
 *.png
+
+# claude
+
+.claude/

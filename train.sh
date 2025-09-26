@@ -8,6 +8,8 @@ echo "Dataset: Detecção de lesões e perdas em carcaças bovinas"
 echo "Classes: 3 (lesao_traseiro, perda_dianteiro, perda_traseiro)"
 echo "Imagens de treinamento: 720"
 echo "Imagens de validação: 90"
+echo "Configuração: 3000 iterações, learning_rate=0.0001, 512x512"
+echo "Tempo estimado: 4-5 horas na RTX 4050"
 echo ""
 
 # Verificar se os arquivos necessários existem

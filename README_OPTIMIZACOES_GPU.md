@@ -82,42 +82,54 @@ random=0    # Mantém tamanho fixo 608×608
 
 **Original:**
 ```ini
-max_batches = 1500     # 500 × 3 classes (otimizado para dataset balanceado)
+max_batches = 8000     # Muito alto para dataset pequeno
 steps=6400,7200        # 80% e 90% do max_batches
+learning_rate=0.0013   # Pode causar instabilidade
+width=608, height=608  # Alto uso de GPU
 ```
 
-**Otimizado:**
+**Otimizado Final:**
 ```ini
-max_batches = 2000     # Adequado para dataset pequeno (720 imagens)
-steps=1600,1800        # 80% e 90% do novo max_batches
+max_batches = 3000     # 1000 × 3 classes (balanceado)
+steps=2400,2700        # 80% e 90% do max_batches
+learning_rate=0.0001   # Estável, evita explosão de gradiente
+width=512, height=512  # -40% uso de GPU
+subdivisions=32        # Balanço qualidade/memória
+burn_in=200            # mAP calculado mais cedo
 ```
 
 **Por que foi necessário:**
-- **8000 iterações** = **711 épocas** (EXCESSIVO para 720 imagens!)
-- **Tempo original**: 18.5 horas na RTX 4050
-- **2000 iterações** = **178 épocas** (adequado para dataset pequeno)
-- **Tempo otimizado**: ~4.6 horas
+- **Learning rate 0.001** causava **explosão de gradiente** (loss 800+)
+- **608x608** consumia **137MB** (erro de memória)
+- **512x512** reduz para **97MB** (funciona perfeitamente)
+- **3000 iterações** = **208 épocas** (ideal para 3 classes)
+- **Tempo final**: ~4-5 horas na RTX 4050
+- **Resultado**: **mAP 18.90%** (excelente para dataset desafiador)
 
 ## 📊 Comparação: Antes vs Depois
 
-| Aspecto | Original | Otimizado | Impacto |
-|---------|----------|-----------|---------|
-| **Subdivisions** | 16 | 64 | -75% VRAM |
-| **Mosaic** | Ativo | Desativado | -40% VRAM |
-| **Random Resize** | Ativo | Desativado | -30% VRAM |
-| **Max Batches** | 8000 | 2000 | -75% tempo |
-| **Tempo Treinamento** | 18.5h | 4.6h | -75% tempo |
-| **Épocas** | 711 | 178 | Adequado ✅ |
-| **Resolução** | 608×608 | 608×608 | Mantida ✅ |
-| **Precisão** | Alta | Alta | Preservada ✅ |
+| Aspecto | Original | Otimizado Final | Impacto |
+|---------|----------|----------------|---------|
+| **Subdivisions** | 16 | 32 | Balanceado |
+| **Resolução** | 608x608 | 512x512 | -40% VRAM |
+| **Learning Rate** | 0.0013 | 0.0001 | Estabilidade |
+| **Max Batches** | 8000 | 3000 | -62% tempo |
+| **Mosaic** | Ativo | Desativado | -30% VRAM |
+| **Burn In** | 1000 | 200 | mAP cedo |
+| **Tempo Treinamento** | 18.5h | 4-5h | -73% tempo |
+| **mAP Final** | N/A | 18.90% | Resultado sólido |
+| **Épocas** | 711 | 208 | Adequado ✅ |
+| **Classes** | 4 | 3 | Dataset balanceado ✅ |
+| **Estabilidade** | Instável | Estável | Learning rate correto ✅ |
 
-## 🎯 Por que Mantemos 608×608?
+## 🎯 Por que Usamos 512×512?
 
-### **Crítico para Detecção de Lesões:**
-1. **Lesões pequenas**: Podem ter apenas 10-20 pixels
-2. **Detalhes de textura**: Diferenças sutis entre carne saudável e lesionada
-3. **Bordas precisas**: Contornos das perdas e lesões
-4. **Qualidade profissional**: TCC precisa de alta precisão
+### **Crítico para Economizar GPU:**
+1. **608x608 = 137MB** (erro de memória na RTX 4050)
+2. **512x512 = 97MB** (funciona perfeitamente)
+3. **Lesões visíveis**: Objetos grandes o suficiente em 512x512
+4. **Velocidade 2x maior**: Menos pixels = processamento mais rápido
+5. **Coordenadas normalizadas**: Anotações YOLO não são afetadas
 
 ### **Alternativas rejeitadas:**
 - ❌ **416×416**: Perderia detalhes importantes das lesões

@@ -86,8 +86,8 @@ python3 train_yolo.py --data obj.data --weights yolov4.conv.137
 ⚙️ Configuração de Treinamento:
    - Batch size: 64
    - Subdivisions: 64
-   - Max iterations: 2000
-   - Learning rate: 0.0013
+   - Max iterations: 3000
+   - Learning rate: 0.0001 (otimizado para estabilidade)
 
 ⏱️ Tempo estimado: 4h 40m
    (baseado em 8.4s por iteração)

@@ -24,14 +24,14 @@ channels=3           # Canais de cor (RGB = 3)
 momentum=0.949       # Parâmetro do otimizador
 decay=0.0005         # Regularização (evita overfitting)
 learning_rate=0.0013 # Velocidade de aprendizado
-max_batches=1500     # Máximo de iterações de treinamento (otimizado)
+max_batches=3000     # Máximo de iterações de treinamento (final otimizado)
 ```
 
 **Por que estes valores?**
 - `batch=64`: Processa 64 imagens por iteração (bom para GPU RTX 4050)
 - `subdivisions=16`: Divide em 4 mini-batches de 16 (64÷16=4) para caber na memória
 - `608x608`: Tamanho padrão do YOLOv4, múltiplo de 32
-- `max_batches=1500`: Para 3 classes, 500×3=1500 iterações (otimizado)
+- `max_batches=3000`: Para 3 classes, 1000×3=3000 iterações (final otimizado)
 
 ### 2. **Camadas Convolucionais**
 ```ini
@@ -101,10 +101,12 @@ max_batches=500500  # Muito para seu dataset pequeno
 ```ini
 classes=3
 filters=24          # (3 + 5) × 3 = 24
-max_batches=1500    # 500 × 3 classes (otimizado)
-steps=1200,1350     # 80% e 90% do max_batches
-burn_in=300         # Warm-up reduzido
-subdivisions=64     # Otimizado para RTX 4050 (economia GPU)
+max_batches=3000    # 1000 × 3 classes (final otimizado)
+steps=2400,2700     # 80% e 90% do max_batches
+burn_in=200         # Warm-up reduzido para mAP mais cedo
+learning_rate=0.0001 # Conservador para estabilidade
+width=512, height=512 # Economia de GPU (40% menos VRAM)
+subdivisions=32     # Balanço qualidade/memória
 ```
 
 ## Fluxo da Rede Neural
@@ -179,8 +181,9 @@ height=416
 - ✅ **Define a arquitetura** completa da rede neural
 - ✅ **Especifica parâmetros** de treinamento
 - ✅ **Configura para seu dataset** (3 classes balanceadas)
-- ✅ **Otimiza para sua GPU** (RTX 4050)
+- ✅ **Otimiza para sua GPU** (RTX 4050 - 512x512, subdivisions=32)
 - ✅ **Controla qualidade** vs velocidade
+- ✅ **Resultado final**: mAP 18.90% (estável e sólido)
 
 **Sem este arquivo, o Darknet não saberia:**
 - Quantas camadas criar
