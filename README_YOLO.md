@@ -153,7 +153,7 @@ Após o treinamento, você encontrará na pasta `backup/`:
 
 ## Dicas de Uso
 
-1. **Tempo de treinamento**: Com sua RTX 4050, o treinamento leva ~4-5 horas (3000 iterações)
+1. **Tempo de treinamento**: Com a RTX 4050, o treinamento leva ~4-5 horas (3000 iterações)
 2. **Monitoramento**: Acompanhe a loss - deve convergir gradualmente
 3. **Early stopping**: Se a loss parar de diminuir, você pode interromper o treinamento
 4. **Inferência**: Use threshold entre 0.3-0.5 para detecção (ajuste conforme necessário)
@@ -257,5 +257,5 @@ git push
 
 Para dúvidas sobre este projeto de detecção de lesões em carcaças bovinas:
 - **Autores**: Felipe e José Pires
-- **Projeto**: TCC - Detecção automática com YOLO
+- **Projeto**: TCC - Detecção de carcaças bovinas utilizando visão computacional
 - **Tecnologias**: Darknet, YOLO v4, CUDA

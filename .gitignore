@@ -91,10 +91,14 @@ yolov4.conv.137
 backup/
 
 # YOLO - Arquivos temporários de treinamento
-chart.png
 *.backup
 *.png
+!chart.png
 
 # claude
 
 .claude/
+
+# arquivos py
+
+count_classes.py
